@@ -1,0 +1,17 @@
+# 测试配置文件
+server:
+  port: 8101
+voyager:
+  # 数据库配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/hi-interview-db?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+  # Redis 配置
+  redis:
+    database: 11
+    host: localhost
+    port: 8079
+    timeout: 5000
+    password: 123456
