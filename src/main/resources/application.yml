@@ -22,12 +22,16 @@ spring:
     username: ${voyager.datasource.username}
     password: ${voyager.datasource.password}
   # Redis 配置
-#  redis:
-#    database: ${voyager.redis.database}
-#    host: ${voyager.redis.host}
-#    port: ${voyager.redis.port}
-#    timeout: ${voyager.redis.timeout}
-#    password: ${voyager.redis.password}
+  redis:
+    database: ${voyager.redis.database}
+    host: ${voyager.redis.host}
+    port: ${voyager.redis.port}
+    timeout: ${voyager.redis.timeout}
+    password: ${voyager.redis.password}
+  elasticsearch:
+    uris: http://localhost:9200
+    username: root
+    password: 123456
   # 文件上传
   servlet:
     multipart:

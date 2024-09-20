@@ -19,8 +19,6 @@ import com.voyager.interview.model.entity.QuestionBankQuestion;
 import com.voyager.interview.model.entity.User;
 import com.voyager.interview.model.vo.QuestionBankQuestionVO;
 import com.voyager.interview.service.QuestionBankQuestionService;
-import com.voyager.interview.service.QuestionBankService;
-import com.voyager.interview.service.QuestionService;
 import com.voyager.interview.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -42,7 +40,6 @@ public class QuestionBankQuestionController {
 
     @Resource
     private UserService userService;
-
 
 
     // region 增删改查
@@ -213,7 +210,7 @@ public class QuestionBankQuestionController {
      * @param questionBankQuestionRemoveRequest
      * @return
      */
-    @PostMapping("/delete")
+    @PostMapping("/remove")
     public BaseResponse<Boolean> removeQuestionBankQuestion(@RequestBody QuestionBankQuestionRemoveRequest questionBankQuestionRemoveRequest) {
         ThrowUtils.throwIf(questionBankQuestionRemoveRequest != null, ErrorCode.PARAMS_ERROR);
         Long questionId = questionBankQuestionRemoveRequest.getQuestionId();
