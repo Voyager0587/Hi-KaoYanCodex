@@ -18,6 +18,7 @@ import com.voyager.interview.model.entity.Question;
 import com.voyager.interview.model.entity.QuestionBank;
 import com.voyager.interview.model.entity.User;
 import com.voyager.interview.model.vo.QuestionBankVO;
+import com.voyager.interview.model.vo.QuestionVO;
 import com.voyager.interview.service.QuestionBankService;
 import com.voyager.interview.service.QuestionService;
 import com.voyager.interview.service.UserService;
@@ -149,8 +150,12 @@ public class QuestionBankController {
         if (questionBankQueryRequest.getNeedQueryQuestionList()){
             QuestionQueryRequest questionQueryRequest = new QuestionQueryRequest();
             questionQueryRequest.setQuestionBankId(id);
+            // 可以按需支持更多的题目搜索参数，比如分页
+            questionQueryRequest.setPageSize(questionBankQueryRequest.getPageSize());
+            questionQueryRequest.setCurrent(questionBankQueryRequest.getCurrent());
             Page<Question> questionPage = questionService.listQuestionByPage(questionQueryRequest);
-            questionBankVO.setQuestionPage(questionPage);
+            Page<QuestionVO> questionVOPage = questionService.getQuestionVOPage(questionPage, request);
+            questionBankVO.setQuestionPage(questionVOPage);
         }
         // 获取封装类
         return ResultUtils.success(questionBankVO);
@@ -167,6 +172,7 @@ public class QuestionBankController {
     public BaseResponse<Page<QuestionBank>> listQuestionBankByPage(@RequestBody QuestionBankQueryRequest questionBankQueryRequest) {
         long current = questionBankQueryRequest.getCurrent();
         long size = questionBankQueryRequest.getPageSize();
+        ThrowUtils.throwIf(size > 200, ErrorCode.PARAMS_ERROR);
         // 查询数据库
         Page<QuestionBank> questionBankPage = questionBankService.page(new Page<>(current, size),
                 questionBankService.getQueryWrapper(questionBankQueryRequest));
