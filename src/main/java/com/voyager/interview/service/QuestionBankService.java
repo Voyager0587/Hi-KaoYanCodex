@@ -49,4 +49,12 @@ public interface QuestionBankService extends IService<QuestionBank> {
      * @return
      */
     Page<QuestionBankVO> getQuestionBankVOPage(Page<QuestionBank> questionBankPage, HttpServletRequest request);
+
+
+
+
+
+
+
+
 }
