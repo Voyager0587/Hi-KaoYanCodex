@@ -163,3 +163,9 @@ knife4j:
         api-rule-resources:
           - com.voyager.interview.controller
 
+# 热 key 探测
+hotkey:
+  app-name: hi-interview
+  caffeine-size: 10000
+  push-period: 1000
+  etcd-server: http://localhost:2379
