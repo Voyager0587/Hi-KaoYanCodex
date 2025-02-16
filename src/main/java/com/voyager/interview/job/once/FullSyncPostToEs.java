@@ -10,13 +10,14 @@ import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import cn.hutool.core.collection.CollUtil;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 
 /**
- * 全量同步帖子到 es
+ * 全量同步课程到 Elasticsearch，实现高效的搜索。
  *
+ * @author liukai
  */
-// todo 取消注释开启任务
-//@Component
+@Component
 @Slf4j
 public class FullSyncPostToEs implements CommandLineRunner {
 

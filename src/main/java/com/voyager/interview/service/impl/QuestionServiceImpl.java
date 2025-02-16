@@ -1,5 +1,6 @@
 package com.voyager.interview.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -8,7 +9,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.voyager.interview.common.ErrorCode;
 import com.voyager.interview.constant.CommonConstant;
+import com.voyager.interview.exception.BusinessException;
 import com.voyager.interview.exception.ThrowUtils;
+import com.voyager.interview.manager.CounterManager;
 import com.voyager.interview.mapper.QuestionMapper;
 import com.voyager.interview.model.dto.question.QuestionEsDTO;
 import com.voyager.interview.model.dto.question.QuestionQueryRequest;
@@ -44,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -59,7 +63,8 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     private QuestionBankQuestionService questionBankQuestionService;
     @Resource
     private ElasticsearchRestTemplate elasticsearchRestTemplate;
-
+    @Resource
+    private CounterManager counterManager;
     /**
      * 校验数据
      *
@@ -160,6 +165,39 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
 
         return questionVO;
     }
+
+    /**
+     * 检测爬虫
+     *
+     * @param loginUserId
+     */
+    public void crawlerDetect(long loginUserId) {
+        // 调用多少次时告警
+        final int WARN_COUNT = 10;
+        // 超过多少次封号
+        final int BAN_COUNT = 20;
+        // 拼接访问 key
+        String key = String.format("user:access:%s", loginUserId);
+        // 一分钟内访问次数，180 秒过期
+        long count = counterManager.incrAndGetCounter(key, 1, TimeUnit.MINUTES, 180);
+        // 是否封号
+        if (count > BAN_COUNT) {
+            // 踢下线
+            StpUtil.kickout(loginUserId);
+            // 封号
+            User updateUser = new User();
+            updateUser.setId(loginUserId);
+            updateUser.setUserRole("ban");
+            userService.updateById(updateUser);
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "访问太频繁，已被封号");
+        }
+        // 是否告警
+        if (count == WARN_COUNT) {
+            // 可以改为向管理员发送邮件通知
+            throw new BusinessException(110, "警告访问太频繁");
+        }
+    }
+
 
     /**
      * 分页获取问题封装
