@@ -51,7 +51,7 @@
 ### 1. 克隆仓库
 
 ```bash
-git clone https://github.com/your-username/Hi-KaoYanCodex.git
+git clone https://github.com/Voyager0587/Hi-KaoYanCodex.git
 cd Hi-KaoYanCodex
 ```
 
@@ -119,6 +119,6 @@ mvn test
 
 ## 👨‍💻 开发者
 
-* **Voyager0587** - \[[https://github.com/Voyager0587](https://github.com/Voyager0587)]
+* **Voyager0587** - [[https://github.com/Voyager0587](https://github.com/Voyager0587)]
 * **其他贡献者** - 感谢所有为项目贡献的人！
 
